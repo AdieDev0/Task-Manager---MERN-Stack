@@ -1,6 +1,6 @@
 const express = require("express");
 const authMiddleware = require("../middleware/authMiddleware");
-const Task = require("../models/Task");
+const Task = require("../models/taskModel");
 
 const router = express.Router();
 
@@ -23,7 +23,9 @@ router.post("/", authMiddleware, async (req, res) => {
 // GET ALL TASK USERS
 router.get("/", authMiddleware, async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.user.id }).sort({ createdAt: -1 });
+    const tasks = await Task.find({ user: req.user.id }).sort({
+      createdAt: -1,
+    });
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: "Server Error" });
@@ -38,7 +40,8 @@ router.put("/:id", authMiddleware, async (req, res) => {
     let task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
-    if (task.user.toString() !== req.user.id) return res.status(403).json({ message: "Unauthorized" });
+    if (task.user.toString() !== req.user.id)
+      return res.status(403).json({ message: "Unauthorized" });
 
     task.title = title || task.title;
     task.description = description || task.description;
@@ -57,7 +60,8 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
-    if (task.user.toString() !== req.user.id) return res.status(403).json({ message: "Unauthorized" });
+    if (task.user.toString() !== req.user.id)
+      return res.status(403).json({ message: "Unauthorized" });
 
     await task.deleteOne();
     res.json({ message: "Task deleted successfully" });
