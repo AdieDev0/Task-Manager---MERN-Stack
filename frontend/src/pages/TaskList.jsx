@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchTasks, createTask, updateTask, deleteTask } from "../api/apiBackend";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineDelete, AiOutlineCheckCircle, AiOutlinePlus } from "react-icons/ai";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
@@ -38,24 +39,38 @@ const TaskList = () => {
   };
 
   return (
-    <div>
-      <h2>Task Manager</h2>
-      <form onSubmit={handleAddTask}>
-        <input type="text" placeholder="New Task" value={newTask} onChange={(e) => setNewTask(e.target.value)} />
-        <button type="submit">Add</button>
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+      <h2 className="text-2xl font-semibold text-center">Task Manager</h2>
+      <form onSubmit={handleAddTask} className="flex mt-4">
+        <input
+          type="text"
+          placeholder="New Task"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          className="flex-1 p-2 border rounded-md"
+        />
+        <button type="submit" className="ml-2 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 flex items-center">
+          <AiOutlinePlus className="mr-1" /> Add
+        </button>
       </form>
-      <ul>
+      <ul className="mt-4">
         {tasks.map((task) => (
-          <li key={task._id} style={{ textDecoration: task.completed ? "line-through" : "none" }}>
-            {task.title}
-            <button onClick={() => handleUpdateTask(task._id, task.completed)}>
-              {task.completed ? "Undo" : "Complete"}
-            </button>
-            <button onClick={() => handleDeleteTask(task._id)}>Delete</button>
+          <li key={task._id} className="flex justify-between items-center p-2 border-b">
+            <span className={task.completed ? "line-through text-gray-500" : ""}>{task.title}</span>
+            <div className="flex gap-2">
+              <button onClick={() => handleUpdateTask(task._id, task.completed)} className="text-green-500">
+                <AiOutlineCheckCircle />
+              </button>
+              <button onClick={() => handleDeleteTask(task._id)} className="text-red-500">
+                <AiOutlineDelete />
+              </button>
+            </div>
           </li>
         ))}
       </ul>
-      <button onClick={() => { localStorage.removeItem("token"); navigate("/login"); }}>Logout</button>
+      <button onClick={() => { localStorage.removeItem("token"); navigate("/login"); }} className="w-full mt-4 bg-red-600 text-white p-2 rounded-md hover:bg-red-700">
+        Logout
+      </button>
     </div>
   );
 };
