@@ -10,8 +10,8 @@ API.interceptors.request.use((req) => {
 });
 
 // AUTHENTICATION API
-export const registerUser = (userData) => API.post("/auth/register", userData);
-export const loginUser = (userData) => API.post("/auth/login", userData);
+export const registerUser = (userData) => API.post("/userRoutes/register", userData);
+export const loginUser = (userData) => API.post("/userRoutes/login", userData);
 
 // TASK API
 export const fetchTasks = () => API.get("/tasks");
