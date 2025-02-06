@@ -1,26 +1,29 @@
 import { useState } from "react";
 import { registerUser } from "../api/apiBackend";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
-  const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
-  const notify = () => toast("Register Success!");
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await registerUser(formData);
-      navigate("/login");
+      toast.success("Registration Successful! 🎉");
+      setTimeout(() => navigate("/login"), 2000); // Delay navigation for better UX
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error(error.response?.data?.message || "Registration Failed!");
     }
   };
 
@@ -34,7 +37,7 @@ const Register = () => {
             name="username"
             placeholder="Username"
             onChange={handleChange}
-            className="w-full p-3 border rounded-md my-2"
+            className="w-full p-3 border rounded-md my-2 focus:ring-2 focus:ring-green-500"
             required
           />
           <input
@@ -42,7 +45,7 @@ const Register = () => {
             name="email"
             placeholder="Email"
             onChange={handleChange}
-            className="w-full p-3 border rounded-md my-2"
+            className="w-full p-3 border rounded-md my-2 focus:ring-2 focus:ring-green-500"
             required
           />
           <input
@@ -50,13 +53,17 @@ const Register = () => {
             name="password"
             placeholder="Password"
             onChange={handleChange}
-            className="w-full p-3 border rounded-md my-2"
+            className="w-full p-3 border rounded-md my-2 focus:ring-2 focus:ring-green-500"
             required
           />
-          <button onClick={notify} type="submit" className="w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700">
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition-all"
+          >
             Register
           </button>
         </form>
+        <ToastContainer position="top-right" autoClose={3000} />
         <p className="mt-4 text-center text-sm">
           Already have an account?{" "}
           <a href="/login" className="text-green-600 hover:underline">
