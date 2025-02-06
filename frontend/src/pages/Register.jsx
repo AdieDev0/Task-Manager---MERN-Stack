@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerUser } from "../api/apiBackend";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 
 const Register = () => {
   const [formData, setFormData] = useState({ username: "", email: "", password: "" });
@@ -9,6 +10,9 @@ const Register = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+
+  const notify = () => toast("Register Success!");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,7 +53,7 @@ const Register = () => {
             className="w-full p-3 border rounded-md my-2"
             required
           />
-          <button type="submit" className="w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700">
+          <button onClick={notify} type="submit" className="w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700">
             Register
           </button>
         </form>
