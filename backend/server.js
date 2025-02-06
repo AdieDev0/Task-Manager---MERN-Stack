@@ -13,7 +13,7 @@ app.use(cors());
 
 // ROUTES
 app.use("/api/userRoutes", require("./routes/userRoutes"));
-app.use("/api/tasks", require("./routes/task")); // ✅ Ensure correct path
+app.use("/api/tasks", require("./routes/task"));
 
 // DATABASE CONNECTION
 mongoose
