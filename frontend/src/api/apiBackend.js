@@ -14,7 +14,7 @@ export const registerUser = (userData) => API.post("/userRoutes/register", userD
 export const loginUser = (userData) => API.post("/userRoutes/login", userData);
 
 // TASK API (Ensure these match backend routes)
-export const fetchTasks = () => API.get("/tasks");  // ✅ Ensure correct API endpoint
-export const createTask = (taskData) => API.post("/tasks", taskData);
-export const updateTask = (id, taskData) => API.put(`/tasks/${id}`, taskData);
-export const deleteTask = (id) => API.delete(`/tasks/${id}`);
+export const fetchTasks = () => API.get("/");  // ✅ Ensure correct API endpoint
+export const createTask = (taskData) => API.post("/", taskData);
+export const updateTask = (id, taskData) => API.put(`/${id}`, taskData);
+export const deleteTask = (id) => API.delete(`/${id}`);
