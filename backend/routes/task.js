@@ -27,7 +27,9 @@ router.get("/", authMiddleware, async (req, res) => {
     console.log("Headers received:", req.headers);
     console.log("User from middleware:", req.user);
 
-    const tasks = await Task.find({ user: req.user.id }).sort({ createdAt: -1 });
+    const tasks = await Task.find({ user: req.user.id }).sort({
+      createdAt: -1,
+    });
     res.json(tasks);
   } catch (err) {
     console.error(err);
@@ -40,11 +42,16 @@ router.put("/:id", authMiddleware, async (req, res) => {
   try {
     const { title, description, completed } = req.body;
 
+    console.log("Task ID to update:", req.params.id);
     let task = await Task.findById(req.params.id);
-    if (!task) return res.status(404).json({ message: "Task not found" });
+    if (!task) {
+      console.log("Task not found");
+      return res.status(404).json({ message: "Task not found" });
+    }
 
-    if (task.user.toString() !== req.user.id)
+    if (task.user.toString() !== req.user.id) {
       return res.status(403).json({ message: "Unauthorized" });
+    }
 
     task.title = title || task.title;
     task.description = description || task.description;
@@ -61,11 +68,16 @@ router.put("/:id", authMiddleware, async (req, res) => {
 // DELETE TASK
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
+    console.log("Task ID to delete:", req.params.id);
     const task = await Task.findById(req.params.id);
-    if (!task) return res.status(404).json({ message: "Task not found" });
+    if (!task) {
+      console.log("Task not found");
+      return res.status(404).json({ message: "Task not found" });
+    }
 
-    if (task.user.toString() !== req.user.id)
+    if (task.user.toString() !== req.user.id) {
       return res.status(403).json({ message: "Unauthorized" });
+    }
 
     await task.deleteOne();
     res.json({ message: "Task deleted successfully" });
