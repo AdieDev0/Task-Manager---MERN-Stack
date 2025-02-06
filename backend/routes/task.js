@@ -16,23 +16,26 @@ router.post("/", authMiddleware, async (req, res) => {
 
     res.status(201).json(newTask);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
 });
 
-// GET ALL TASK USERS
+// GET ALL TASKS FOR LOGGED-IN USER
 router.get("/", authMiddleware, async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.user.id }).sort({
-      createdAt: -1,
-    });
+    console.log("Headers received:", req.headers);
+    console.log("User from middleware:", req.user);
+
+    const tasks = await Task.find({ user: req.user.id }).sort({ createdAt: -1 });
     res.json(tasks);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
 });
 
-// UDPATE TASK
+// UPDATE TASK
 router.put("/:id", authMiddleware, async (req, res) => {
   try {
     const { title, description, completed } = req.body;
@@ -50,6 +53,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
     await task.save();
     res.json(task);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
 });
@@ -66,6 +70,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     await task.deleteOne();
     res.json({ message: "Task deleted successfully" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
 });
