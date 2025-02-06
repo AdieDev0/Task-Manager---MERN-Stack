@@ -14,7 +14,7 @@ const TaskList = () => {
         const { data } = await fetchTasks();
         setTasks(data);
       } catch (error) {
-        navigate("/login");
+        navigate("/");
       }
     };
     getTasks();

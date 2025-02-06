@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { loginUser } from "../api/apiBackend";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom"; // ✅ Use Link instead of <a>
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [loading, setLoading] = useState(false); // ✅ Add loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -28,7 +28,7 @@ const Login = () => {
       const errorMessage = error.response?.data?.message || "Login failed. Try again.";
       alert(errorMessage);
     } finally {
-      setLoading(false); // ✅ Reset loading state
+      setLoading(false);
     }
   };
 
@@ -56,9 +56,9 @@ const Login = () => {
           <button
             type="submit"
             className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700"
-            disabled={loading} // ✅ Disable button while loading
+            disabled={loading}
           >
-            {loading ? "Logging in..." : "Login"} {/* ✅ Show loading text */}
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="mt-4 text-center text-sm">
