@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { loginUser } from "../api/apiBackend";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom"; // ✅ Use Link instead of <a>
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false); // ✅ Add loading state
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -12,12 +14,21 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // ✅ Show loading state
+
     try {
       const { data } = await loginUser(formData);
-      localStorage.setItem("token", data.token);
-      navigate("/");
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+        navigate("/");
+      } else {
+        alert("Invalid login response");
+      }
     } catch (error) {
-      alert(error.response.data.message);
+      const errorMessage = error.response?.data?.message || "Login failed. Try again.";
+      alert(errorMessage);
+    } finally {
+      setLoading(false); // ✅ Reset loading state
     }
   };
 
@@ -42,15 +53,19 @@ const Login = () => {
             className="w-full p-3 border rounded-md my-2"
             required
           />
-          <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700">
-            Login
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700"
+            disabled={loading} // ✅ Disable button while loading
+          >
+            {loading ? "Logging in..." : "Login"} {/* ✅ Show loading text */}
           </button>
         </form>
         <p className="mt-4 text-center text-sm">
           Don't have an account?{" "}
-          <a href="/register" className="text-blue-600 hover:underline">
+          <Link to="/register" className="text-blue-600 hover:underline">
             Register
-          </a>
+          </Link>
         </p>
       </div>
     </div>
