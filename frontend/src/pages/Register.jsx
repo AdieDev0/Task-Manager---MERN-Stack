@@ -21,7 +21,7 @@ const Register = () => {
     e.preventDefault();
     try {
       await registerUser(formData);
-      toast.success("Registration Successful! 🎉");
+      toast.success("Registration Successful!");
       setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
       toast.error(error.response?.data?.message || "Registration Failed!");
