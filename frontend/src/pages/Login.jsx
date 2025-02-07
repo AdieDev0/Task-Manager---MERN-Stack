@@ -23,6 +23,7 @@ const Login = () => {
       const { data } = await loginUser(formData);
       if (data?.token) {
         localStorage.setItem("token", data.token);
+        toast.success("Registration Successful! 🎉");
         navigate("/");
       } else {
         alert("Invalid login response");
