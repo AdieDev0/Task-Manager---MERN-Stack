@@ -1,109 +1,90 @@
-import { useState, useEffect } from "react";
-import { fetchTasks, createTask, updateTask, deleteTask } from "../api/apiBackend";
+import { useState } from "react";
+import { loginUser } from "../api/apiBackend";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineDelete, AiOutlineCheckCircle, AiOutlinePlus } from "react-icons/ai";
-import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const TaskList = () => {
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
+const Login = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getTasks = async () => {
-      try {
-        const { data } = await fetchTasks();
-        setTasks(data);
-      } catch (error) {
-        navigate("/");
-      }
-    };
-    getTasks();
-  }, [navigate]);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const handleAddTask = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newTask) return;
-    const { data } = await createTask({ title: newTask });
-    setTasks([...tasks, data]);
-    setNewTask("");
-  };
+    setLoading(true);
 
-  const handleUpdateTask = async (id, completed) => {
-    await updateTask(id, { completed: !completed });
-    setTasks(tasks.map(task => (task._id === id ? { ...task, completed: !completed } : task)));
-  };
-
-  const handleDeleteTask = async (id) => {
-    await deleteTask(id);
-    setTasks(tasks.filter(task => task._id !== id));
+    try {
+      const { data } = await loginUser(formData);
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+        toast.success("Login Successful! 🎉", { position: "top-right", autoClose: 3000 });
+        setTimeout(() => navigate("/"), 2000);
+      } else {
+        toast.error("Invalid login response", { position: "top-right", autoClose: 3000 });
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Login failed. Try again.";
+      toast.error(errorMessage, { position: "top-right", autoClose: 3000 });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="flex items-center justify-center min-h-screen bg-gray-50 px-4"
     >
-      <h2 className="text-2xl font-semibold text-center">Task Manager</h2>
-      <form onSubmit={handleAddTask} className="flex mt-4">
-        <input
-          type="text"
-          placeholder="New Task"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          className="flex-1 p-2 border rounded-md"
-        />
-        <motion.button 
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          type="submit" 
-          className="ml-2 bg-blue-600 text-white p-2 rounded-md flex items-center hover:bg-blue-700"
-        >
-          <AiOutlinePlus className="mr-1" /> Add
-        </motion.button>
-      </form>
-      <ul className="mt-4">
-        <AnimatePresence>
-          {tasks.map((task) => (
-            <motion.li 
-              key={task._id} 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="flex justify-between items-center p-2 border-b"
-            >
-              <span className={task.completed ? "line-through text-gray-500" : ""}>{task.title}</span>
-              <div className="flex gap-2">
-                <motion.button 
-                  whileHover={{ scale: 1.2 }}
-                  onClick={() => handleUpdateTask(task._id, task.completed)} 
-                  className="text-green-500"
-                >
-                  <AiOutlineCheckCircle />
-                </motion.button>
-                <motion.button 
-                  whileHover={{ scale: 1.2 }}
-                  onClick={() => handleDeleteTask(task._id)} 
-                  className="text-red-500"
-                >
-                  <AiOutlineDelete />
-                </motion.button>
-              </div>
-            </motion.li>
-          ))}
-        </AnimatePresence>
-      </ul>
-      <motion.button 
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => { localStorage.removeItem("token"); navigate("/login"); }}
-        className="w-full mt-4 bg-red-600 text-white p-2 rounded-md hover:bg-red-700"
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-sm bg-white p-6 rounded-xl shadow-xl"
       >
-        Logout
-      </motion.button>
+        <h2 className="text-3xl font-bold text-center text-gray-900">Login</h2>
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            required
+          />
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            type="submit"
+            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </motion.button>
+        </form>
+        <ToastContainer position="top-right" autoClose={3000} />
+        <p className="mt-4 text-center text-sm text-gray-700">
+          Don't have an account?{" "}
+          <Link to="/register" className="text-blue-600 font-medium hover:underline">
+            Register
+          </Link>
+        </p>
+      </motion.div>
     </motion.div>
   );
 };
 
-export default TaskList;
+export default Login;

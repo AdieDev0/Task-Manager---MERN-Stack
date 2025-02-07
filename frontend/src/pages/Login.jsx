@@ -23,13 +23,20 @@ const Login = () => {
       const { data } = await loginUser(formData);
       if (data?.token) {
         localStorage.setItem("token", data.token);
-        toast.success("Login Successful!", { position: "top-right", autoClose: 3000 });
+        toast.success("Login Successful!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
         setTimeout(() => navigate("/"), 2000);
       } else {
-        toast.error("Invalid login response", { position: "top-right", autoClose: 3000 });
+        toast.error("Invalid login response", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Login failed. Try again.";
+      const errorMessage =
+        error.response?.data?.message || "Login failed. Try again.";
       toast.error(errorMessage, { position: "top-right", autoClose: 3000 });
     } finally {
       setLoading(false);
@@ -37,17 +44,19 @@ const Login = () => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       className="flex items-center justify-center min-h-screen bg-gray-100"
     >
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md bg-white p-6 rounded-2xl shadow-lg"
       >
-        <h2 className="text-2xl font-semibold text-center text-gray-800">Login</h2>
+        <h2 className="text-2xl font-semibold text-center text-gray-800">
+          Login
+        </h2>
         <form onSubmit={handleSubmit} className="mt-4">
           <input
             type="email"
