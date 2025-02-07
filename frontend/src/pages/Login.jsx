@@ -23,20 +23,13 @@ const Login = () => {
       const { data } = await loginUser(formData);
       if (data?.token) {
         localStorage.setItem("token", data.token);
-        toast.success("Login Successful!", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => navigate("/"), 2000);
+        toast.success("Login Successful! 🎉", { position: "top-right", autoClose: 3000 });
+        setTimeout(() => navigate("/"), 2000); // Redirect to tasks after login
       } else {
-        toast.error("Invalid login response", {
-          position: "top-right",
-          autoClose: 3000,
-        });
+        toast.error("Invalid login response", { position: "top-right", autoClose: 3000 });
       }
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "Login failed. Try again.";
+      const errorMessage = error.response?.data?.message || "Login failed. Try again.";
       toast.error(errorMessage, { position: "top-right", autoClose: 3000 });
     } finally {
       setLoading(false);
@@ -44,26 +37,24 @@ const Login = () => {
   };
 
   return (
-    <motion.div
+    <motion.div 
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="flex items-center justify-center min-h-screen bg-gray-100"
+      className="flex items-center justify-center min-h-screen bg-gray-50 px-4"
     >
-      <motion.div
+      <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white p-6 rounded-2xl shadow-lg"
+        className="w-full max-w-sm bg-white p-6 rounded-xl shadow-xl"
       >
-        <h2 className="text-2xl font-semibold text-center text-gray-800">
-          Login
-        </h2>
-        <form onSubmit={handleSubmit} className="mt-4">
+        <h2 className="text-3xl font-bold text-center text-gray-900">Login</h2>
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <input
             type="email"
             name="email"
             placeholder="Email"
             onChange={handleChange}
-            className="w-full p-3 border rounded-md my-2"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             required
           />
           <input
@@ -71,23 +62,23 @@ const Login = () => {
             name="password"
             placeholder="Password"
             onChange={handleChange}
-            className="w-full p-3 border rounded-md my-2"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             required
           />
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700"
+            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}
           </motion.button>
         </form>
         <ToastContainer position="top-right" autoClose={3000} />
-        <p className="mt-4 text-center text-sm">
+        <p className="mt-4 text-center text-sm text-gray-700">
           Don't have an account?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
+          <Link to="/register" className="text-blue-600 font-medium hover:underline">
             Register
           </Link>
         </p>
