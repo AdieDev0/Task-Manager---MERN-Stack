@@ -23,14 +23,14 @@ const Login = () => {
       const { data } = await loginUser(formData);
       if (data?.token) {
         localStorage.setItem("token", data.token);
-        toast.success("Registration Successful! 🎉");
+        toast.success("Login Successful! 🎉");
         navigate("/");
       } else {
-        alert("Invalid login response");
+        toast.error("Invalid login response");
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Login failed. Try again.";
-      alert(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -75,6 +75,7 @@ const Login = () => {
             {loading ? "Logging in..." : "Login"}
           </motion.button>
         </form>
+        <ToastContainer />
         <p className="mt-4 text-center text-sm">
           Don't have an account?{" "}
           <Link to="/register" className="text-blue-600 hover:underline">
