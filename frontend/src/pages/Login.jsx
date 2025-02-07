@@ -23,7 +23,7 @@ const Login = () => {
       const { data } = await loginUser(formData);
       if (data?.token) {
         localStorage.setItem("token", data.token);
-        toast.success("Login Successful! 🎉", { position: "top-right", autoClose: 3000 });
+        toast.success("Login Successful!", { position: "top-right", autoClose: 3000 });
         setTimeout(() => navigate("/"), 2000);
       } else {
         toast.error("Invalid login response", { position: "top-right", autoClose: 3000 });
